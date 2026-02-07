@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>befit Victor - Gimnasio Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; }
+        .font-oswald { font-family: 'Oswald', sans-serif; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #fb923c; border-radius: 10px; }
+        
+        .view-transition { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @keyframes scan { 0%, 100% { top: 1rem; } 50% { top: calc(100% - 1.25rem); } }
+        @keyframes progress { from { width: 100%; } to { width: 0%; } }
+        .animate-scan { animation: scan 2s ease-in-out infinite; }
+        .animate-progress { animation: progress 60s linear infinite; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "@google/genai": "https://esm.sh/@google/genai@^1.40.0",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-black text-white">
+    <div id="app" class="max-w-md mx-auto min-h-screen relative pb-20">
+        <!-- Las vistas se inyectarán aquí -->
+    </div>
+
+    <!-- Modal QR Global -->
+    <div id="qr-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="toggleQR(false)"></div>
+        <div class="relative bg-neutral-900 border border-neutral-800 w-full max-w-xs rounded-[2.5rem] p-8 shadow-2xl shadow-orange-500/10">
+            <button onclick="toggleQR(false)" class="absolute top-4 right-4 text-gray-500 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            <div class="text-center mb-8">
+                <h3 class="text-xl font-oswald font-bold uppercase text-white">Pase Digital</h3>
+                <p class="text-xs text-orange-500 font-bold uppercase tracking-widest mt-1">befit Victor Member</p>
+            </div>
+            <div class="relative aspect-square bg-white rounded-3xl p-4 mb-8 shadow-[0_0_20px_rgba(251,146,60,0.2)] overflow-hidden">
+                <svg viewBox="0 0 100 100" class="w-full h-full text-black">
+                    <path fill="currentColor" d="M10 10h30v30h-30zM15 15v20h20v-20zM22 22h6v6h-6zM60 10h30v30h-30zM65 15v20h20v-20zM72 22h6v6h-6zM10 60h30v30h-30zM15 65v20h20v-20zM22 72h6v6h-6zM50 10h5v5h-5zM55 15h5v5h-5zM50 20h5v5h-5zM55 25h5v5h-5zM50 30h5v5h-5zM55 35h5v5h-5zM45 45h10v10h-10zM60 50h5v5h-5zM65 55h5v5h-5zM70 60h5v5h-5zM75 65h5v5h-5zM80 70h5v5h-5zM85 75h5v5h-5zM60 70h10v5h-10zM60 80h15v5h-15zM75 80h15v10h-15z" />
+                    <rect x="42" y="42" width="16" height="16" fill="#fb923c" />
+                </svg>
+                <div class="absolute left-4 right-4 top-4 h-1 bg-orange-500/50 shadow-[0_0_10px_#fb923c] animate-scan rounded-full"></div>
+            </div>
+            <div class="space-y-4 text-center">
+                <div class="h-1 bg-neutral-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-orange-500 animate-progress"></div>
+                </div>
+                <p class="text-[10px] text-gray-500 uppercase font-bold">Válido por 60 segundos</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navegación Inferior -->
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-black/80 backdrop-blur-xl border-t border-white/10 px-8 py-4 flex justify-between items-center z-50">
+        <button onclick="router.navigate('home')" class="nav-link flex flex-col items-center gap-1 text-gray-500" data-view="home">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+            <span class="text-[10px] font-bold uppercase">Inicio</span>
+        </button>
+        <button onclick="router.navigate('coach')" class="nav-link flex flex-col items-center gap-1 text-gray-500" data-view="coach">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+            <span class="text-[10px] font-bold uppercase">Coach IA</span>
+        </button>
+        <button onclick="router.navigate('profile')" class="nav-link flex flex-col items-center gap-1 text-gray-500" data-view="profile">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+            <span class="text-[10px] font-bold uppercase">Perfil</span>
+        </button>
+    </nav>
+
+    <script type="module" src="./index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
